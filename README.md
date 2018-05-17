@@ -107,13 +107,13 @@ When you connect to the TCP interface of the **Auditor**, you should receive an 
 |Question | How can we represent the system in an **architecture diagram**, which gives information both about the Docker containers, the communication protocols and the commands? |
 | | *Insert your diagram here...* |
 |Question | Who is going to **send UDP datagrams** and **when**? |
-| | *Enter your response here...* |
+| | The musician. Using multicast. Every second. |
 |Question | Who is going to **listen for UDP datagrams** and what should happen when a datagram is received? |
-| | *Enter your response here...* |
+| | The auditor. Check who is playing. If he know this musician already, he updates its playingSince field. If he doesn't know him, he insert him in his database (a simple array) |
 |Question | What **payload** should we put in the UDP datagrams? |
-| | *Enter your response here...* |
+| | uuid + instrument sound + date of emission |
 |Question | What **data structures** do we need in the UDP sender and receiver? When will we update these data structures? When will we query these data structures? |
-| | *Enter your response here...* |
+| | A simple array will be ok in the audior (maybe not the best). It will be querried everytime he receive a JSON payload from a musician. In the musician we just nee a Musician object that will be serialized. |
 
 
 ## Task 2: implement a "musician" Node.js application
@@ -121,19 +121,19 @@ When you connect to the TCP interface of the **Auditor**, you should receive an 
 | #  | Topic
 | ---  | ---
 |Question | In a JavaScript program, if we have an object, how can we **serialize it in JSON**?
-| | *Enter your response here...*
+| | var payload = JSON.stringify(musician);
 |Question | What is **npm**?
-| | *Enter your response here...*
+| | It is the official packet manager for NodeJS
 |Question | What is the `npm install` command and what is the purpose of the `--save` flag?
-| | *Enter your response here...*
+| | This command installs a package, and any packages that it depends on. The --save option instructed NPM to include the package inside of the dependencies section of your package.json automatically, thus saving you an additional step.
 |Question | How can we use the `https://www.npmjs.com/` web site?
 | | *Enter your response here...*
 |Question | In JavaScript, how can we **generate a UUID** compliant with RFC4122?
-| | *Enter your response here...*
+| | We can use the uuid package from NPM
 |Question | In Node.js, how can we execute a function on a **periodic** basis?
-| | *Enter your response here...*
+| | By using setInterval() : var intervalID = setInterval(function(){alert("Interval reached");}, 5000);
 |Question | In Node.js, how can we **emit UDP datagrams**?
-| | *Enter your response here...*
+| | send function
 |Question | In Node.js, how can we **access the command line arguments**?
 | | *Enter your response here...*
 
@@ -143,17 +143,21 @@ When you connect to the TCP interface of the **Auditor**, you should receive an 
 | #  | Topic
 | ---  | ---
 |Question | How do we **define and build our own Docker image**?
-| | *Enter your response here...*
+| | docker build --tag res/musician --file ./docker/image-musician/Dockerfile ./docker/image-musician/
+docker build --tag res/auditor --file ./docker/image-auditor/Dockerfile ./docker/image-auditor/
+
+docker run -d -p 2205:2205 res/auditor
+docker run -d res/musician piano
 |Question | How can we use the `ENTRYPOINT` statement in our Dockerfile?
-| | *Enter your response here...*
+| | We have to give the js app path and say we will use node
 |Question | After building our Docker image, how do we use it to **run containers**?
-| | *Enter your response here...*
+| | c.f. above
 |Question | How do we get the list of all **running containers**?
-| | *Enter your response here...*
+| | sudo docker ps -a
 |Question | How do we **stop/kill** one running container?
-| | *Enter your response here...*
+| | sudo docker kill my_container
 |Question | How can we check that our running containers are effectively sending UDP datagrams?
-| | *Enter your response here...*
+| | We can log them or have a server running and catching theses datagrams and then log them
 
 
 ## Task 4: implement an "auditor" Node.js application
@@ -161,15 +165,15 @@ When you connect to the TCP interface of the **Auditor**, you should receive an 
 | #  | Topic
 | ---  | ---
 |Question | With Node.js, how can we listen for UDP datagrams in a multicast group?
-| | *Enter your response here...*
+| | server.on
 |Question | How can we use the `Map` built-in object introduced in ECMAScript 6 to implement a **dictionary**? 
 | | *Enter your response here...*
 |Question | How can we use the `Moment.js` npm module to help us with **date manipulations** and formatting? 
 | | *Enter your response here...*
 |Question | When and how do we **get rid of inactive players**? 
-| | *Enter your response here...*
+| | I juste compare two date.gettime()
 |Question | How do I implement a **simple TCP server** in Node.js? 
-| | *Enter your response here...*
+| | server.listen()
 
 
 ## Task 5: package the "auditor" app in a Docker image
@@ -177,7 +181,7 @@ When you connect to the TCP interface of the **Auditor**, you should receive an 
 | #  | Topic
 | ---  | ---
 |Question | How do we validate that the whole system works, once we have built our Docker image?
-| | *Enter your response here...*
+| | We can connect to the Auditor using Telnet
 
 
 ## Constraints
